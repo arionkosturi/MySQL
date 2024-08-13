@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: shop
 -- ------------------------------------------------------
--- Server version	8.4.2
+-- Server version	9.0.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -85,7 +85,8 @@ CREATE TABLE `orders` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int DEFAULT NULL,
   `total` float DEFAULT NULL,
-  `status` enum('Shipped','Shipping','Returned') DEFAULT NULL,
+  `status` enum('Created','Shipped','Shipping','Returned') DEFAULT 'Created',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fk_orders_user_id_idx` (`user_id`),
   CONSTRAINT `fk_orders_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -98,7 +99,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (1,5,10.25,'Shipping'),(2,4,3.8,NULL),(3,5,4.2,NULL);
+INSERT INTO `orders` VALUES (1,5,10.25,'Shipping','2024-08-13 07:16:45'),(2,4,3.8,NULL,'2024-08-13 07:16:45'),(3,5,4.2,NULL,'2024-08-13 07:16:45');
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -112,7 +113,8 @@ DROP TABLE IF EXISTS `payment`;
 CREATE TABLE `payment` (
   `oder_id` int DEFAULT NULL,
   `user_id` int DEFAULT NULL,
-  `status` enum('Unpaid','Paid') DEFAULT 'Unpaid',
+  `status` enum('Unpaid','Paid','Refunded') DEFAULT 'Unpaid',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   KEY `fk_payment_user_id_idx` (`user_id`),
   KEY `fk_payment_order_id_idx` (`oder_id`),
   CONSTRAINT `fk_payment_order_id` FOREIGN KEY (`oder_id`) REFERENCES `orders` (`id`),
@@ -324,4 +326,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-11 21:19:39
+-- Dump completed on 2024-08-13 10:08:48
